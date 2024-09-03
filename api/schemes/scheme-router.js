@@ -52,7 +52,7 @@ router.get('/', (req, res, next) => {
     ]
   }
 */
-router.get('/:scheme_id', /* checkSchemeId, */ (req, res, next) => {
+router.get('/:scheme_id', checkSchemeId, async (req, res, next) => {
   const { scheme_id } = req.params
 
   Schemes.findById(scheme_id)
@@ -81,7 +81,7 @@ router.get('/:scheme_id', /* checkSchemeId, */ (req, res, next) => {
     }
   ]
 */
-router.get('/:scheme_id/steps', checkSchemeId, (req, res, next) => {
+router.get('/:scheme_id/steps', checkSchemeId, async (req, res, next) => {
   const { scheme_id } = req.params
 
   Schemes.findSteps(scheme_id)
@@ -100,7 +100,7 @@ router.get('/:scheme_id/steps', checkSchemeId, (req, res, next) => {
     "scheme_name": "Take Ovah"
   }
 */
-router.post('/', validateScheme, (req, res, next) => {
+router.post('/', validateScheme, async (req, res, next) => {
   const scheme = req.body
 
   Schemes.add(scheme)
@@ -129,11 +129,11 @@ router.post('/', validateScheme, (req, res, next) => {
     }
   ]
 */
-router.post('/:scheme_id/steps', checkSchemeId, validateStep, (req, res, next) => {
-  const step = req.body
+router.post('/:scheme_id/steps', checkSchemeId, validateStep, async (req, res, next) => {
+  const { instructions, step_number } = req.body
   const { scheme_id } = req.params
 
-  Schemes.addStep(scheme_id, step)
+  Schemes.addStep(scheme_id, { instructions, step_number })
     .then(allSteps => {
       res.status(201).json(allSteps)
     })
